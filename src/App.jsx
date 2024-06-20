@@ -1,44 +1,37 @@
-import './App.css'
-import { useQuery, gql } from '@apollo/client';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import CountryList from './components/conuntryList/CountryList';
+import CountryDetails from './components/countryDetail/CountryDetails';
 
-const GET_LOCATIONS = gql`
-  query GetLocations {
-    locations {
-      id
-      name
-      description
-      photo
-    }
-  }
-`;
-function DisplayLocations() {
-  const { loading, error, data } = useQuery(GET_LOCATIONS);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error : {error.message}</p>;
-
-  return data.locations.map(({ id, name, description, photo }) => (
-    <div key={id}>
-      <h3>{name}</h3>
-      <img width="400" height="250" alt="location-reference" src={`${photo}`} />
-      <br />
-      <b>About this location:</b>
-      <p>{description}</p>
-      <br />
-    </div>
-  ));
-}
 function App() {
-
   return (
-    <>
-       <div>
-      <h2>My first Apollo app 🚀</h2>
-      <br/>
-      <DisplayLocations />
-    </div>
-    </>
-  )
+    <Router>
+      <div className="flex h-screen">
+        <Sidebar />
+        <div className="flex-1 p-4">
+          <Routes>
+            <Route path="/" element={<CountryList />} />
+            <Route path="/country/:code" element={<CountryDetails />} />
+          </Routes>
+        </div>
+      </div>
+    </Router>
+  );
 }
 
-export default App
+function Sidebar() {
+  return (
+    <div className="w-64 h-screen bg-gray-800 text-white">
+      <div className="p-4">
+        <h1 className="text-2xl font-bold">Countries Explorer</h1>
+      </div>
+      <ul>
+        <li className="p-4 hover:bg-gray-700">
+          <a href="/" className="w-full">List of Countries</a>
+        </li>
+      </ul>
+    </div>
+  );
+}
+
+export default App;

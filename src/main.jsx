@@ -1,33 +1,15 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
-import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import App from './App';
+import { ApolloProvider } from '@apollo/client';
+import client from './vue/vue-apollo';
 
-const client = new ApolloClient({
-  uri: 'https://flyby-router-demo.herokuapp.com/',
-  cache: new InMemoryCache(),
-});
-
-client
-  .query({
-    query: gql`
-      query GetLocations {
-        locations {
-          id
-          name
-          description
-          photo
-        }
-      }
-    `,
-  })
-  .then((result) => console.log(result));
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const container = document.getElementById('root');
+const root = createRoot(container);
 
 root.render(
   <ApolloProvider client={client}>
     <App />
-  </ApolloProvider>,
+  </ApolloProvider>
 );
