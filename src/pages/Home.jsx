@@ -73,7 +73,7 @@ function Home() {
       </div>
       {filteredCountries.length === 0 ? (
         <div className="flex items-center justify-center h-64">
-          <p className="text-lg text-gray-600">No countries found matching the filters.</p>
+          <p className="text-lg text-gray-600">No countries found matching the filters</p>
         </div>
       ) : (
         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
