@@ -36,15 +36,3 @@ export const GET_COUNTRY_BY_CODE = gql`
         }
     }
 `;
-export const GET_COUNTRIES = gql`
-  query {
-    countries {
-      code
-      name
-      continent {
-        code
-        name
-      }
-    }
-  }
-`;

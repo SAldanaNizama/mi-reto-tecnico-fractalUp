@@ -29,8 +29,7 @@ function ContinentFilter({ onFilter }) {
       try {
         let response;
         if (continent.code === 'all') {
-          // For the 'All' option, you can set a default image or leave it empty
-          newContinentImages[continent.code] = ''; // Set a default image for 'All'
+          newContinentImages[continent.code] = ''; 
         } else {
           response = await axios.get(`https://api.unsplash.com/search/photos?query=${continent.name}`, {
             headers: {
@@ -47,8 +46,8 @@ function ContinentFilter({ onFilter }) {
   };
 
   const handleFilter = (code) => {
-    onFilter(code); // Envía el código del continente seleccionado al componente padre (Home)
-    setIsContinentMenuOpen(false); // Cierra el menú después de seleccionar un continente
+    onFilter(code);
+    setIsContinentMenuOpen(false); 
   };
 
   return (
