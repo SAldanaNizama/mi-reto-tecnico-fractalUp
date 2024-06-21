@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_ALL_COUNTRIES } from '../graphql/queries';
 import { Link } from 'react-router-dom';
 import ContinentFilter from '../components/filterByContinent/FilterByContinent';
 import { fetchCountryImage } from '../graphql/fetchCountryFlag';
+import Spinner from '../components/spiner/spinner';
 
 function Home() {
   const { loading, error, data } = useQuery(GET_ALL_COUNTRIES);
@@ -16,7 +17,7 @@ function Home() {
     const fetchData = async () => {
       if (data && data.countries) {
         const imagesPromises = data.countries.map(async (country) => {
-          const imageUrl = await fetchCountryImage(country.name);
+          const imageUrl = await fetchCountryImage(country.code);
           return { code: country.code, imageUrl };
         });
 
@@ -27,7 +28,7 @@ function Home() {
         }, {});
 
         setCountryImages(imagesMap);
-        setFilteredCountries(data.countries); // Inicializar con todos los países
+        setFilteredCountries(data.countries);
       }
     };
 
@@ -54,38 +55,42 @@ function Home() {
     }
   }, [searchTerm, selectedContinent, data]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Spinner />;
   if (error) return <p>Error :(</p>;
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4">List of Countries</h1>
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Search for a country..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="p-2 border border-gray-300 rounded mb-4 w-full"
-        />
+      <div className="mb-4 flex flex-col md:flex-row md:items-center md:space-x-4">
+        <div className="flex-grow">
+          <input
+            type="text"
+            placeholder="Search for a country..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="p-2 border border-gray-300 rounded w-full md:w-1/3"
+          />
+        </div>
+        <div className="mt-4 md:mt-0">
+          <ContinentFilter onFilter={(code) => setSelectedContinent(code)} />
+        </div>
       </div>
-      <ContinentFilter onFilter={(code) => setSelectedContinent(code)} />
       {filteredCountries.length === 0 ? (
         <p>No countries found matching the filters.</p>
       ) : (
         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredCountries.map(country => (
-            <li key={country.code} className="bg-white p-4 rounded shadow hover:shadow-lg transition-shadow">
-              <Link to={`/country/${country.code}`} className="text-xl font-bold no-underline hover:underline">
-                {country.name} - {country.capital}
+            <li key={country.code} className="transform transition-transform hover:scale-105">
+              <Link to={`/country/${country.code}`} className="block bg-white p-4 rounded shadow hover:shadow-lg no-underline">
+                <div className="text-xl font-bold">{country.name}</div>
+                {countryImages[country.code] && (
+                  <img
+                    src={countryImages[country.code]}
+                    alt={`${country.name} flag`}
+                    className="mt-2 w-full h-48 object-cover rounded"
+                  />
+                )}
               </Link>
-              {countryImages[country.code] && (
-                <img
-                  src={countryImages[country.code]}
-                  alt={`${country.name} flag`}
-                  className="mt-2 w-full h-48 object-cover rounded"
-                />
-              )}
             </li>
           ))}
         </ul>

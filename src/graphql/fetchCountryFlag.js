@@ -1,20 +1,25 @@
-// api.js
-
 import axios from 'axios';
 
-export const fetchCountryImage = async (countryName) => {
-    const url = `https://api.unsplash.com/search/photos?query=${encodeURIComponent(countryName)}`;
-    const apiKey = import.meta.env.VITE_UNSPLASH_API_KEY;
-    
+export const fetchCountryImage = async (countryCode) => {
+    const primaryBaseUrl = 'https://flagcdn.com';
+    const fallbackBaseUrl = 'https://flagsapi.com';
+
     try {
-        const response = await axios.get(url, {
-            headers: {
-                'Authorization': `Client-ID ${apiKey}`
-            }
-        });
-        return response.data.results[0]?.urls.regular; // Obtener la URL de la imagen regular
+        // Intenta con la primera API
+        const primaryFlagUrl = `${primaryBaseUrl}/${countryCode.toLowerCase()}.svg`;
+        await axios.head(primaryFlagUrl);
+        return primaryFlagUrl;
     } catch (error) {
-        console.error('Error fetching country image:', error);
-        return null;
+        console.warn(`Error fetching flag from primary source for country code ${countryCode}:`, error);
+        
+        try {
+            // Si falla, intenta con la API alternativa
+            const fallbackFlagUrl = `${fallbackBaseUrl}/${countryCode}/flat/64.png`;
+            await axios.head(fallbackFlagUrl);
+            return fallbackFlagUrl;
+        } catch (fallbackError) {
+            console.error(`Error fetching flag from fallback source for country code ${countryCode}:`, fallbackError);
+            return null;
+        }
     }
 };

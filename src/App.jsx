@@ -6,9 +6,12 @@ import Sidebar from './components/sideBar/SideBar';
 function App() {
   return (
     <Router>
-      <div className="flex h-screen">
-        <Sidebar /> 
-        <div className="flex-1 p-4">
+      <div className="flex h-screen overflow-hidden">
+        {/* Sidebar */}
+        <Sidebar />
+
+        {/* Main content */}
+        <div className="flex-1 p-4 overflow-y-auto">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/country/:code" element={<CountryDetails />} />
@@ -16,7 +19,7 @@ function App() {
         </div>
       </div>
     </Router>
-  );  
+  );
 }
 
 export default App;

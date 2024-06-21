@@ -1,8 +1,9 @@
-// ContinentFilter.js
+// eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
 const continentsData = [
+  { code: '', name: 'All' },
   { code: 'AF', name: 'Africa' },
   { code: 'AN', name: 'Antarctica' },
   { code: 'AS', name: 'Asia' },
@@ -12,6 +13,7 @@ const continentsData = [
   { code: 'SA', name: 'South America' }
 ];
 
+// eslint-disable-next-line react/prop-types
 function ContinentFilter({ onFilter }) {
   const [continentImages, setContinentImages] = useState({});
   const [isContinentMenuOpen, setIsContinentMenuOpen] = useState(false);
@@ -25,12 +27,18 @@ function ContinentFilter({ onFilter }) {
     const newContinentImages = {};
     for (let continent of continentsData) {
       try {
-        const response = await axios.get(`https://api.unsplash.com/search/photos?query=${continent.name}`, {
-          headers: {
-            Authorization: `Client-ID ${import.meta.env.VITE_UNSPLASH_API_KEY}`
-          }
-        });
-        newContinentImages[continent.code] = response.data.results[0]?.urls?.small || '';
+        let response;
+        if (continent.code === 'all') {
+          // For the 'All' option, you can set a default image or leave it empty
+          newContinentImages[continent.code] = ''; // Set a default image for 'All'
+        } else {
+          response = await axios.get(`https://api.unsplash.com/search/photos?query=${continent.name}`, {
+            headers: {
+              Authorization: `Client-ID ${import.meta.env.VITE_UNSPLASH_API_KEY}`
+            }
+          });
+          newContinentImages[continent.code] = response.data.results[0]?.urls?.small || '';
+        }
       } catch (error) {
         console.error('Error fetching image:', error);
       }
@@ -39,20 +47,20 @@ function ContinentFilter({ onFilter }) {
   };
 
   const handleFilter = (code) => {
-    onFilter(code); // Aquí se envía el código del continente seleccionado al componente padre (Home)
-    setIsContinentMenuOpen(false); // Cerrar el menú después de seleccionar un continente
+    onFilter(code); // Envía el código del continente seleccionado al componente padre (Home)
+    setIsContinentMenuOpen(false); // Cierra el menú después de seleccionar un continente
   };
 
   return (
-    <div className="mb-4 relative">
+    <div className="relative mb-4 flex justify-end">
       <button
-        className="p-2 bg-blue-500 text-white rounded mb-4 w-full"
+        className="p-2 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 focus:outline-none"
         onClick={() => setIsContinentMenuOpen(!isContinentMenuOpen)}
       >
         Filter by Continent
       </button>
       {isContinentMenuOpen && (
-        <div ref={menuRef} className="absolute w-full bg-white shadow-lg rounded mt-1 z-10">
+        <div ref={menuRef} className="absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg z-10">
           {continentsData.map((continent) => (
             <div
               key={continent.code}
@@ -76,4 +84,3 @@ function ContinentFilter({ onFilter }) {
 }
 
 export default ContinentFilter;
-              
