@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import ContinentFilter from '../components/filterByContinent/FilterByContinent';
 import { fetchCountryImage } from '../graphql/fetchCountryFlag';
 import Spinner from '../components/spiner/spinner';
-import SearchInput from '../components/searchbar/SearchBar';
+import SearchInput from "../components/searchbar/SearchBar"
 function Home() {
   const { loading, error, data } = useQuery(GET_ALL_COUNTRIES);
   const [countryImages, setCountryImages] = useState({});
