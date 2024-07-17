@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
-import { useQuery } from '@apollo/client';
-import { GET_ALL_COUNTRIES } from '../graphql/queries';
-import { Link } from 'react-router-dom';
-import ContinentFilter from '../components/filterByContinent/FilterByContinent';
-import { fetchCountryImage } from '../graphql/fetchCountryFlag';
-import Spinner from '../components/spiner/spinner';
-import SearchInput from '../components/searchbar/searchBar';
+import { useState, useEffect } from "react";
+import { useQuery } from "@apollo/client";
+import { GET_ALL_COUNTRIES } from "../graphql/queries";
+import { Link } from "react-router-dom";
+import ContinentFilter from "../components/filterByContinent/FilterByContinent";
+import { fetchCountryImage } from "../graphql/fetchCountryFlag";
+import Spinner from "../components/spiner/spinner";
+import SearchInput from "../components/searchbar/searchBar";
 function Home() {
   const { loading, error, data } = useQuery(GET_ALL_COUNTRIES);
   const [countryImages, setCountryImages] = useState({});
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedContinent, setSelectedContinent] = useState(null);
   const [filteredCountries, setFilteredCountries] = useState([]);
 
@@ -40,14 +40,15 @@ function Home() {
       let filtered = data.countries;
 
       if (searchTerm) {
-        filtered = filtered.filter(country =>
+        filtered = filtered.filter((country) =>
           country.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
       }
 
       if (selectedContinent) {
-        filtered = filtered.filter(country =>
-          country.continent && country.continent.code === selectedContinent
+        filtered = filtered.filter(
+          (country) =>
+            country.continent && country.continent.code === selectedContinent
         );
       }
 
@@ -55,12 +56,13 @@ function Home() {
     }
   }, [searchTerm, selectedContinent, data]);
 
- 
-
   if (loading) return <Spinner />;
-  if (error) return <div className="flex items-center justify-center h-64">
-          <p className="text-lg text-gray-600">Error 404</p>
-        </div>;
+  if (error)
+    return (
+      <div className="flex items-center justify-center h-64">
+        <p className="text-lg text-gray-600">Error 404</p>
+      </div>
+    );
 
   return (
     <div className="container mx-auto p-4">
@@ -73,13 +75,21 @@ function Home() {
       </div>
       {filteredCountries.length === 0 ? (
         <div className="flex items-center justify-center h-64">
-          <p className="text-lg text-gray-600">No countries found matching the filters</p>
+          <p className="text-lg text-gray-600">
+            No countries found matching the filters
+          </p>
         </div>
       ) : (
         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredCountries.map(country => (
-            <li key={country.code} className="transform transition-transform hover:scale-105">
-              <Link to={`/country/${country.code}`} className="block bg-white p-4 rounded shadow hover:shadow-lg no-underline">
+          {filteredCountries.map((country) => (
+            <li
+              key={country.code}
+              className="transform transition-transform hover:scale-105"
+            >
+              <Link
+                to={`/country/${country.code}`}
+                className="block bg-white p-4 rounded shadow hover:shadow-lg no-underline"
+              >
                 <div className="text-xl font-bold">{country.name}</div>
                 {countryImages[country.code] && (
                   <img
