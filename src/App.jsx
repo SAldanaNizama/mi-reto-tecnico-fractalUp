@@ -1,10 +1,10 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
-import CountryDetails from './pages/CountryDetail';
-import Sidebar from './components/sideBar/SideBar';
-import About from './pages/About';
-import "./App.css"
-import SnakeGame from "./pages/Games"
+import { Router, Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import CountryDetails from "./pages/CountryDetail";
+import Sidebar from "./components/sideBar/SideBar";
+import About from "./pages/About";
+import "./App.css";
+import SnakeGame from "./pages/Games";
 function App() {
   return (
     <Router>
@@ -15,8 +15,8 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/country/:code" element={<CountryDetails />} />
-              <Route path='/about' element={<About />} />
-              <Route path='/Games' element={<SnakeGame/>}/>
+              <Route path="/about" element={<About />} />
+              <Route path="/Games" element={<SnakeGame />} />
             </Routes>
           </div>
         </div>
